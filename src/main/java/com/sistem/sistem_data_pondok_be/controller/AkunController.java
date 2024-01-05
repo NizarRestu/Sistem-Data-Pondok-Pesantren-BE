@@ -9,6 +9,7 @@ import com.sistem.sistem_data_pondok_be.service.AkunService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -17,6 +18,7 @@ public class AkunController {
 
     @Autowired
     private AkunService akunService;
+
 
     @PostMapping("/login")
     public CommonResponse<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -28,8 +30,8 @@ public class AkunController {
     }
 
     @PostMapping("/add/santri")
-    public CommonResponse<Akun> addSantri(@RequestBody Akun akun){
-        return ResponseHelper.ok( akunService.addSantri(akun));
+    public CommonResponse<Akun> addSantri(@RequestBody Akun akun ){
+        return ResponseHelper.ok( akunService.addSantri(akun ));
     }
     @GetMapping("/{id}")
     public CommonResponse <Akun> get(@PathVariable("id") Long id){
@@ -39,11 +41,11 @@ public class AkunController {
     public CommonResponse<List<Akun>> getAll(){
         return ResponseHelper.ok( akunService.getAll());
     }
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public CommonResponse<Akun> put(@PathVariable("id") Long id , @RequestBody Akun akun){
         return ResponseHelper.ok( akunService.edit(id, akun));
     }
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id")  Long id) {
         return ResponseHelper.ok( akunService.delete(id));
     }

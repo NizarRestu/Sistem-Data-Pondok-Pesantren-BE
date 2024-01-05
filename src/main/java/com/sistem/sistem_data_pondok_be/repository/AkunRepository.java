@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface AkunRepository extends JpaRepository<Akun, Long> {
-    Optional<Akun> findByUsername(String username);
+    Optional<Akun> findByEmail(String email);
 
-    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 }

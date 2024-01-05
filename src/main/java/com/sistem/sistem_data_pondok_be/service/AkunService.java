@@ -35,20 +35,17 @@ public class AkunService {
 
 
     public Map<Object, Object> login(LoginRequest loginRequest) {
-        Akun user = akunRepository.findByUsername(loginRequest.getUsername()).orElseThrow(() -> new RuntimeException("Username not found"));
+        Akun user = akunRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new RuntimeException("Username not found"));
         if (encoder.matches(loginRequest.getPassword(), user.getPassword())) {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getPassword(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateToken(authentication);
             user.setLast_login(new Date());
             akunRepository.save(user);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String formattedLastLogin = sdf.format(user.getLast_login());
             Map<Object, Object> response = new HashMap<>();
             response.put("data", user);
             response.put("token", jwt);
-            response.put("last_login", formattedLastLogin);
             return response;
         }
         throw new NotFoundException("Password not found");
@@ -78,7 +75,7 @@ public class AkunService {
         Akun update = akunRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setPassword(user.getPassword());
         update.setUsername(user.getUsername());
-        return akunRepository.save(user);
+        return akunRepository.save(update);
     }
     public Map<String, Boolean> delete(Long id) {
         try {

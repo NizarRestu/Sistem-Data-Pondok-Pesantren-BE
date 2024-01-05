@@ -24,7 +24,7 @@ import java.util.Map;
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
-    private String jwtSecret = "payment";
+    private String jwtSecret = "pondok";
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String jwt = request.getHeader("auth-tgh");

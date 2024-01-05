@@ -16,16 +16,16 @@ public class UserDetail implements UserDetails {
     @JsonIgnore
     private String password;
 
-    public UserDetail(Long id, String username, String password) {
+    public UserDetail(Long id, String email, String password) {
         this.id = id;
-        this.username = username;
+        this.username = email;
         this.password = password;
     }
 
     public static UserDetail buildUser(Akun admin) {
         return new UserDetail(
                 admin.getId(),
-                admin.getUsername(),
+                admin.getEmail(),
                 admin.getPassword());
     }
 

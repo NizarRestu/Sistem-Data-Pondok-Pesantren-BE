@@ -29,7 +29,7 @@ public class JwtUtils {
 
     public String generateToken(Authentication authentication) {
         UserDetail adminPrincipal = (UserDetail) authentication.getPrincipal();
-        Akun user = userRepository.findByUsername(adminPrincipal.getUsername()).get();
+        Akun user = userRepository.findByEmail(adminPrincipal.getUsername()).get();
         return Jwts.builder()
                 .setSubject(adminPrincipal.getUsername())
                 .claim("id" , adminPrincipal.getId())

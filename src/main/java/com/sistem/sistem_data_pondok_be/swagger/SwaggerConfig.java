@@ -26,7 +26,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.payment.gateaway.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.sistem.sistem_data_pondok_be.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo( apiInfo())
