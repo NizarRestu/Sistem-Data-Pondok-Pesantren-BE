@@ -1,13 +1,14 @@
 package com.sistem.sistem_data_pondok_be.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sistem.sistem_data_pondok_be.auditing.DateConfig;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "akun")
-public class Akun {
+public class Akun extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

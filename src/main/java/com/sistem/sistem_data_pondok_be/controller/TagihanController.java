@@ -19,8 +19,9 @@ public class TagihanController {
     private static final String JWT_PREFIX = "jwt ";
 
     @PostMapping("/add")
-    public CommonResponse<Tagihan> add(@RequestBody Tagihan tagihan){
-        return ResponseHelper.ok( tagihanService.addTagihan(tagihan));
+    public CommonResponse<Tagihan> add(@RequestBody Tagihan tagihan , HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( tagihanService.addTagihan(tagihan ,jwtToken));
     }
     @GetMapping("/{id}")
     public CommonResponse <Tagihan> get(@PathVariable("id") Long id){

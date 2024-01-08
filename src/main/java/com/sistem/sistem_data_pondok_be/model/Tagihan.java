@@ -1,10 +1,12 @@
 package com.sistem.sistem_data_pondok_be.model;
 
+import com.sistem.sistem_data_pondok_be.auditing.DateConfig;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "tagihan")
-public class Tagihan {
+public class Tagihan extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,8 +29,8 @@ public class Tagihan {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "order_id")
-    private String order_id;
+    @Column(name = "transaksi_id")
+    private Long transaksi_id;
 
     public String getJenis_tagihan() {
         return jenis_tagihan;
@@ -86,11 +88,11 @@ public class Tagihan {
         this.status = status;
     }
 
-    public String getOrder_id() {
-        return order_id;
+    public Long getTransaksi_id() {
+        return transaksi_id;
     }
 
-    public void setOrder_id(String order_id) {
-        this.order_id = order_id;
+    public void setTransaksi_id(Long transaksi_id) {
+        this.transaksi_id = transaksi_id;
     }
 }

@@ -27,9 +27,13 @@ public class TagihanService {
     private AkunRepository akunRepository;
 
 
-    public Tagihan addTagihan(Tagihan tagihan) {
+    public Tagihan addTagihan(Tagihan tagihan , String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         tagihan.setStatus("Belum");
-        tagihan.setOrder_id(null);
+        tagihan.setTransaksi_id(null);
+        tagihan.setId_santri(user.getId());
         return tagihanRepository.save(tagihan);
     }
 
