@@ -13,9 +13,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/tagihan")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TagihanController {
     @Autowired
     private TagihanService tagihanService;
+
     private static final String JWT_PREFIX = "jwt ";
 
     @PostMapping("/add")
@@ -28,8 +30,9 @@ public class TagihanController {
         return ResponseHelper.ok( tagihanService.get(id));
     }
     @GetMapping("/all")
-    public CommonResponse<List<Tagihan>> getAll(){
-        return ResponseHelper.ok( tagihanService.getAll());
+    public CommonResponse<List<Tagihan>> getAll( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( tagihanService.getAll(jwtToken));
     }
     @PutMapping("/{id}")
     public CommonResponse<Tagihan> put(@PathVariable("id") Long id , @RequestBody Tagihan tagihan){
@@ -43,5 +46,14 @@ public class TagihanController {
     public CommonResponse<List<Tagihan>> get( HttpServletRequest requests){
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(tagihanService.getTagihan(jwtToken));
+    }
+    @GetMapping("/santri/{userId}/bulan/{bulan}")
+    public List<Tagihan> getTagihanBySantriAndMonth(@PathVariable String userId, @PathVariable int bulan) {
+        return tagihanService.findBySantriIdAndMonth(userId, bulan);
+    }
+    @GetMapping("/bulan/{bulan}")
+    public List<Tagihan> getTagihanByMonth(@PathVariable int bulan , HttpServletRequest requests) {
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return tagihanService.findByMonth(jwtToken,bulan);
     }
 }

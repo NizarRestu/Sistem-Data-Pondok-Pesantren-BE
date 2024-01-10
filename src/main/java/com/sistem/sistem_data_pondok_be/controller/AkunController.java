@@ -14,10 +14,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/akun")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AkunController {
 
     @Autowired
     private AkunService akunService;
+
+    private static final String JWT_PREFIX = "jwt ";
 
 
     @PostMapping("/login")
@@ -30,23 +33,28 @@ public class AkunController {
     }
 
     @PostMapping("/add/santri")
-    public CommonResponse<Akun> addSantri(@RequestBody Akun akun ){
-        return ResponseHelper.ok( akunService.addSantri(akun ));
+    public CommonResponse<Akun> addSantri(@RequestBody Akun akun, HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( akunService.addSantri(akun ,jwtToken));
     }
     @GetMapping("/{id}")
-    public CommonResponse <Akun> get(@PathVariable("id") Long id){
-        return ResponseHelper.ok( akunService.get(id));
+    public CommonResponse <Akun> get(@PathVariable("id") Long id , HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( akunService.get(id ,jwtToken ));
     }
     @GetMapping
-    public CommonResponse<List<Akun>> getAll(){
-        return ResponseHelper.ok( akunService.getAll());
+    public CommonResponse<List<Akun>> getAll( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( akunService.getAll(jwtToken));
     }
     @PutMapping("/{id}")
-    public CommonResponse<Akun> put(@PathVariable("id") Long id , @RequestBody Akun akun){
-        return ResponseHelper.ok( akunService.edit(id, akun));
+    public CommonResponse<Akun> put(@PathVariable("id") Long id , @RequestBody Akun akun ,  HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( akunService.edit(id, akun , jwtToken));
     }
     @DeleteMapping("/{id}")
-    public CommonResponse<?> delete(@PathVariable("id")  Long id) {
-        return ResponseHelper.ok( akunService.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id")  Long id , HttpServletRequest requests) {
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( akunService.delete(id, jwtToken));
     }
 }

@@ -1,10 +1,12 @@
 package com.sistem.sistem_data_pondok_be.service;
 
 import com.sistem.sistem_data_pondok_be.DTO.LoginRequest;
+import com.sistem.sistem_data_pondok_be.exception.BadRequestException;
 import com.sistem.sistem_data_pondok_be.exception.NotFoundException;
 import com.sistem.sistem_data_pondok_be.model.Akun;
 import com.sistem.sistem_data_pondok_be.repository.AkunRepository;
 import com.sistem.sistem_data_pondok_be.security.JwtUtils;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,10 +53,16 @@ public class AkunService {
         throw new NotFoundException("Password not found");
     }
 
-    public Akun addSantri(Akun user) {
+    public Akun addSantri(Akun user , String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun akun = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (akun.getRole().equals("Pengurus")){
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRole("Santri");
         return akunRepository.save(user);
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 
     public Akun addPengurus(Akun user) {
@@ -63,21 +71,44 @@ public class AkunService {
         return akunRepository.save(user);
     }
 
-    public Akun get(Long id) {
+    public Akun get(Long id , String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
         return akunRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 
-    public List<Akun> getAll() {
+    public List<Akun> getAll(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
         return akunRepository.findAll();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 
-    public Akun edit(Long id, Akun user) {
+    public Akun edit(Long id, Akun user , String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun akun = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (akun.equals("Pengurus")){
         Akun update = akunRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setPassword(user.getPassword());
         update.setUsername(user.getUsername());
         return akunRepository.save(update);
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
-    public Map<String, Boolean> delete(Long id) {
+    public Map<String, Boolean> delete(Long id , String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+
         try {
             akunRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();
@@ -86,5 +117,7 @@ public class AkunService {
         } catch (Exception e) {
             return null;
         }
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 }

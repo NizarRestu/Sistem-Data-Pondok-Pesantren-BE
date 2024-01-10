@@ -23,6 +23,14 @@ public class Akun extends DateConfig {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "nama")
+    private String nama;
+
+    @Column(name = "kelas")
+    private String kelas;
+
+
+
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     @Column(name = "last_login")

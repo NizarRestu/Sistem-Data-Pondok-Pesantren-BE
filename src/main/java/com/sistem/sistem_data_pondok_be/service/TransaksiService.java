@@ -1,5 +1,6 @@
 package com.sistem.sistem_data_pondok_be.service;
 
+import com.sistem.sistem_data_pondok_be.exception.BadRequestException;
 import com.sistem.sistem_data_pondok_be.exception.InternalErrorException;
 import com.sistem.sistem_data_pondok_be.exception.NotFoundException;
 import com.sistem.sistem_data_pondok_be.model.Akun;
@@ -114,7 +115,29 @@ public class TransaksiService {
     public Transaksi get(Long id) {
         return transaksiRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
-    public List<Transaksi> getAll() {
+    public List<Transaksi> getAll(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
         return transaksiRepository.findAll();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
+    public List<Transaksi> findBySantriIdAndMonth(String jwtToken, int bulan) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        return transaksiRepository.findBySantriIdAndMonth(String.valueOf(user.getId()), bulan);
+    }
+
+    public List<Transaksi> findByMonth(String jwtToken, int bulan) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+            return transaksiRepository.findByMonth(bulan);
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 }

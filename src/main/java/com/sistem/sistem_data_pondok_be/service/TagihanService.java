@@ -1,5 +1,6 @@
 package com.sistem.sistem_data_pondok_be.service;
 
+import com.sistem.sistem_data_pondok_be.exception.BadRequestException;
 import com.sistem.sistem_data_pondok_be.exception.NotFoundException;
 import com.sistem.sistem_data_pondok_be.model.Akun;
 import com.sistem.sistem_data_pondok_be.model.Tagihan;
@@ -41,8 +42,14 @@ public class TagihanService {
         return tagihanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
-    public List<Tagihan> getAll() {
+    public List<Tagihan> getAll(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
         return tagihanRepository.findAll();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 
     public Tagihan edit(Long id, Tagihan tagihan) {
@@ -68,5 +75,21 @@ public class TagihanService {
         String email = claims.getSubject();
         Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         return tagihanRepository.findBySantriId(String.valueOf(user.getId()));
+    }
+    public List<Tagihan> findBySantriIdAndMonth(String jwtToken, int bulan) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        return tagihanRepository.findBySantriIdAndMonth(String.valueOf(user.getId()), bulan);
+    }
+
+    public List<Tagihan> findByMonth(String jwtToken, int bulan) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+        return tagihanRepository.findByMonth(bulan);
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
 }

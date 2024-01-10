@@ -3,6 +3,7 @@ package com.sistem.sistem_data_pondok_be.controller;
 
 import com.sistem.sistem_data_pondok_be.exception.CommonResponse;
 import com.sistem.sistem_data_pondok_be.exception.ResponseHelper;
+import com.sistem.sistem_data_pondok_be.model.Tagihan;
 import com.sistem.sistem_data_pondok_be.model.Transaksi;
 import com.sistem.sistem_data_pondok_be.service.TransaksiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/transaksi")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TransaksiController {
     @Autowired
     private TransaksiService transaksiService;
+
     private static final String JWT_PREFIX = "jwt ";
 
     @PostMapping(consumes = "multipart/form-data")
@@ -29,8 +32,9 @@ public class TransaksiController {
         return ResponseHelper.ok( transaksiService.get(id));
     }
     @GetMapping("/all")
-    public CommonResponse<List<Transaksi>> getAll(){
-        return ResponseHelper.ok( transaksiService.getAll());
+    public CommonResponse<List<Transaksi>> getAll( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( transaksiService.getAll(jwtToken));
     }
 
     @DeleteMapping("/{id}")
@@ -41,5 +45,14 @@ public class TransaksiController {
     public CommonResponse<List<Transaksi>> get( HttpServletRequest requests){
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transaksiService.getTransaksi(jwtToken));
+    }
+    @GetMapping("/santri/{userId}/bulan/{bulan}")
+    public List<Transaksi> getTagihanBySantriAndMonth(@PathVariable String userId, @PathVariable int bulan) {
+        return transaksiService.findBySantriIdAndMonth(userId, bulan);
+    }
+    @GetMapping("/bulan/{bulan}")
+    public List<Transaksi> getTagihanByMonth(@PathVariable int bulan , HttpServletRequest requests) {
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return transaksiService.findByMonth(jwtToken,bulan);
     }
 }
