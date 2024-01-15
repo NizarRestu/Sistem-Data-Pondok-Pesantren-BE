@@ -22,6 +22,9 @@ public class Transaksi extends DateConfig {
     @Column(name = "id_santri")
     private Long id_santri;
 
+    @Column(name = "nama_santri")
+    private String nama;
+
     @Lob
     @Column(name = "keterangan")
     private String keterangan;
@@ -75,5 +78,13 @@ public class Transaksi extends DateConfig {
 
     public void setKeterangan(String keterangan) {
         this.keterangan = keterangan;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 }

@@ -86,4 +86,20 @@ public class Akun extends DateConfig {
     public void setRole(String role) {
         this.role = role;
     }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
+    }
+
+    public String getKelas() {
+        return kelas;
+    }
+
+    public void setKelas(String kelas) {
+        this.kelas = kelas;
+    }
 }

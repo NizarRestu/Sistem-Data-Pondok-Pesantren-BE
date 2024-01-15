@@ -51,9 +51,18 @@ public class TagihanController {
     public List<Tagihan> getTagihanBySantriAndMonth(@PathVariable String userId, @PathVariable int bulan) {
         return tagihanService.findBySantriIdAndMonth(userId, bulan);
     }
+    @GetMapping("/santri/{userId}/jenis_tagihan/{tagihan}")
+    public List<Tagihan> getTagihanBySantriAndTagihan(@PathVariable String userId, @PathVariable String tagihan) {
+        return tagihanService.findBySantriIdAndTagihan(userId, tagihan);
+    }
     @GetMapping("/bulan/{bulan}")
     public List<Tagihan> getTagihanByMonth(@PathVariable int bulan , HttpServletRequest requests) {
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return tagihanService.findByMonth(jwtToken,bulan);
+    }
+    @GetMapping("/jenis_tagihan/{tagihan}")
+    public List<Tagihan> getTagihanByTagihan(@PathVariable String tagihan , HttpServletRequest requests) {
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return tagihanService.findByTagihan(jwtToken,tagihan);
     }
 }

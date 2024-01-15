@@ -26,6 +26,9 @@ public class Tagihan extends DateConfig {
     @Column(name = "id_santri")
     private Long id_santri;
 
+    @Column(name = "nama_santri")
+    private String nama;
+
     @Column(name = "status")
     private String status;
 
@@ -94,5 +97,13 @@ public class Tagihan extends DateConfig {
 
     public void setTransaksi_id(Long transaksi_id) {
         this.transaksi_id = transaksi_id;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 }

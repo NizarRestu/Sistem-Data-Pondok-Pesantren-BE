@@ -61,6 +61,8 @@ public class TransaksiService {
             transaksi.setStatus("Proses");
             transaksi.setTagihan_id(transaksi.getTagihan_id());
             transaksi.setId_santri(user.getId());
+            transaksi.setNama(user.getNama());
+            transaksi.setKeterangan(transaksi.getKeterangan());
 
             // Simpan transaksi
             transaksiRepository.save(transaksi);
