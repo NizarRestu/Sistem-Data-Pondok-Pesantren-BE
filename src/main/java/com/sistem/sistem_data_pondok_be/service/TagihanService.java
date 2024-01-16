@@ -77,10 +77,13 @@ public class TagihanService {
     }
 
     public List<Tagihan> findBySantriIdAndMonth(String userId, int bulan) {
-        return tagihanRepository.findBySantriIdAndMonth(userId, bulan);
+        return tagihanRepository.findBySantriIdAndMonth(userId,bulan);
     }
     public List<Tagihan> findBySantriIdAndTagihan(String userId, String tagihan) {
-        return tagihanRepository.findBySantriIdAndJenisTagihan(userId    , tagihan);
+        return tagihanRepository.findBySantriIdAndJenisTagihan(userId,tagihan);
+    }
+    public List<Tagihan> findBySantriIdAndTagihanAndStatus(String userId, String tagihan , String status) {
+        return tagihanRepository.findBySantriIdAndJenisTagihanAndStatus(userId,tagihan,status);
     }
     public List<Tagihan> findByMonth(String jwtToken, int bulan) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
@@ -97,6 +100,15 @@ public class TagihanService {
         Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         if (user.getRole().equals("Pengurus")){
         return tagihanRepository.findByJenisTagihan(tagihan);
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
+    public List<Tagihan> findByTagihanAndStatus(String jwtToken, String tagihan , String status) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+        return tagihanRepository.findByJenisTagihanAndStatus(tagihan ,status);
         }
         throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
