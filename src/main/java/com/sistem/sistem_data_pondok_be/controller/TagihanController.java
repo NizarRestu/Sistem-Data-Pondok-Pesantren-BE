@@ -47,6 +47,11 @@ public class TagihanController {
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(tagihanService.getTagihan(jwtToken));
     }
+    @GetMapping("/history")
+    public CommonResponse<List<Tagihan>> getByStatus( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(tagihanService.getTagihanByStatus(jwtToken));
+    }
     @GetMapping("/santri/{userId}/bulan/{bulan}")
     public List<Tagihan> getTagihanBySantriAndMonth(@PathVariable String userId, @PathVariable int bulan) {
         return tagihanService.findBySantriIdAndMonth(userId, bulan);

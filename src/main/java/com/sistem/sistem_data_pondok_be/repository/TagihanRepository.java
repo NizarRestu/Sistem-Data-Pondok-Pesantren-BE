@@ -11,6 +11,8 @@ import java.util.List;
 public interface TagihanRepository extends JpaRepository<Tagihan , Long> {
     @Query(value = "SELECT * FROM tagihan WHERE id_santri = :userId ", nativeQuery = true)
     List<Tagihan> findBySantriId(String userId);
+    @Query(value = "SELECT * FROM tagihan WHERE id_santri = :userId AND status ='Proses' OR status ='Selesai'", nativeQuery = true)
+    List<Tagihan> findByStatus(String userId);
 
     @Query(value = "SELECT * FROM tagihan WHERE id_santri = :userId AND MONTH(created_date) = :bulan", nativeQuery = true)
     List<Tagihan> findBySantriIdAndMonth(@Param("userId") String userId, @Param("bulan") int bulan);

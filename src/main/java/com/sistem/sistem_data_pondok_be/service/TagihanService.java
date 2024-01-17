@@ -75,6 +75,12 @@ public class TagihanService {
         Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         return tagihanRepository.findBySantriId(String.valueOf(user.getId()));
     }
+    public List<Tagihan> getTagihanByStatus(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        return tagihanRepository.findByStatus(String.valueOf(user.getId()));
+    }
 
     public List<Tagihan> findBySantriIdAndMonth(String userId, int bulan) {
         return tagihanRepository.findBySantriIdAndMonth(userId,bulan);
