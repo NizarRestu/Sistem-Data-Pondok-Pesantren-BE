@@ -38,6 +38,10 @@ public class TagihanController {
     public CommonResponse<Tagihan> put(@PathVariable("id") Long id , @RequestBody Tagihan tagihan){
         return ResponseHelper.ok( tagihanService.edit(id, tagihan));
     }
+    @PutMapping("delete/{id}")
+    public CommonResponse<Tagihan> deleteId(@PathVariable("id") Long id){
+        return ResponseHelper.ok( tagihanService.hapusId(id));
+    }
     @DeleteMapping("/{id}")
     public CommonResponse<?> delete(@PathVariable("id")  Long id) {
         return ResponseHelper.ok( tagihanService.delete(id));

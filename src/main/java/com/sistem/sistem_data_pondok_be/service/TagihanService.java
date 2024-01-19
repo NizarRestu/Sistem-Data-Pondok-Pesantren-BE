@@ -59,6 +59,11 @@ public class TagihanService {
         update.setTotal_tagihan(tagihan.getTotal_tagihan());
         return tagihanRepository.save(update);
     }
+    public Tagihan hapusId(Long id) {
+        Tagihan update = tagihanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        update.setId_santri(null);
+        return tagihanRepository.save(update);
+    }
     public Map<String, Boolean> delete(Long id) {
         try {
             tagihanRepository.deleteById(id);
