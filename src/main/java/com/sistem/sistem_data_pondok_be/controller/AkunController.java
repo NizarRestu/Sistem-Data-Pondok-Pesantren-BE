@@ -47,6 +47,11 @@ public class AkunController {
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok( akunService.getAll(jwtToken));
     }
+    @GetMapping("/santri")
+    public CommonResponse<List<Akun>> getSantri( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( akunService.getSantri(jwtToken));
+    }
     @PutMapping("/{id}")
     public CommonResponse<Akun> put(@PathVariable("id") Long id , @RequestBody Akun akun ,  HttpServletRequest requests){
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());

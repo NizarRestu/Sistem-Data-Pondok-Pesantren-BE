@@ -104,6 +104,12 @@ public class TransaksiService {
         Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         return transaksiRepository.findBySantriId(String.valueOf(user.getId()));
     }
+    public List<Transaksi> getHistoryTransaksi(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        return transaksiRepository.findBySantriIdAndStatus(String.valueOf(user.getId()));
+    }
     public Map<String, Boolean> delete(Long id) {
         try {
             transaksiRepository.deleteById(id);
@@ -123,6 +129,15 @@ public class TransaksiService {
         Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         if (user.getRole().equals("Pengurus")){
         return transaksiRepository.findAll();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
+    public List<Transaksi> getTransaksiByStatus(String jwtToken ,String status) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+            return transaksiRepository.findByStatus(status);
         }
         throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }

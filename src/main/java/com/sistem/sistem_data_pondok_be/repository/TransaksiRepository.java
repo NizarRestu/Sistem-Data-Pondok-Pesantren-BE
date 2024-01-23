@@ -13,6 +13,11 @@ import java.util.List;
 public interface TransaksiRepository extends JpaRepository<Transaksi , Long> {
     @Query(value = "SELECT * FROM transaksi WHERE id_santri = :userId ", nativeQuery = true)
     List<Transaksi> findBySantriId(String userId);
+    @Query(value = "SELECT * FROM transaksi WHERE id_santri = :userId AND status = 'Selesai' ", nativeQuery = true)
+    List<Transaksi> findBySantriIdAndStatus(String userId);
+
+    @Query(value = "SELECT * FROM transaksi status =: status ", nativeQuery = true)
+    List<Transaksi> findByStatus(String status);
 
     @Query(value = "SELECT * FROM transaksi WHERE id_santri = :userId AND MONTH(created_date) = :bulan", nativeQuery = true)
     List<Transaksi> findBySantriIdAndMonth(@Param("userId") String userId, @Param("bulan") int bulan);

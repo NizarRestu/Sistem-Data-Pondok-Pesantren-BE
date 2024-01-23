@@ -46,6 +46,16 @@ public class TransaksiController {
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transaksiService.getTransaksi(jwtToken));
     }
+    @GetMapping("/history")
+    public CommonResponse<List<Transaksi>> getHistory( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(transaksiService.getHistoryTransaksi(jwtToken));
+    }
+    @GetMapping("/status")
+    public CommonResponse<List<Transaksi>> getStatus(String status, HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(transaksiService.getTransaksiByStatus(jwtToken , status));
+    }
     @GetMapping("/santri/{userId}/bulan/{bulan}")
     public List<Transaksi> getTagihanBySantriAndMonth(@PathVariable String userId, @PathVariable int bulan) {
         return transaksiService.findBySantriIdAndMonth(userId, bulan);

@@ -14,8 +14,6 @@ public class Tagihan extends DateConfig {
     @Column(name = "nama_tagihan")
     private String nama_tagihan;
 
-    @Column(name = "jumlah_tagihan")
-    private Integer jumlah_tagihan;
 
     @Column(name = "total_tagihan")
     private Integer total_tagihan;
@@ -57,14 +55,6 @@ public class Tagihan extends DateConfig {
 
     public void setNama_tagihan(String nama_tagihan) {
         this.nama_tagihan = nama_tagihan;
-    }
-
-    public Integer getJumlah_tagihan() {
-        return jumlah_tagihan;
-    }
-
-    public void setJumlah_tagihan(Integer jumlah_tagihan) {
-        this.jumlah_tagihan = jumlah_tagihan;
     }
 
     public Integer getTotal_tagihan() {

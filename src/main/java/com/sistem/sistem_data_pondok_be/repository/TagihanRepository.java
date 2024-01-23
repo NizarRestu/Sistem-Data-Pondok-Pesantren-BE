@@ -14,6 +14,9 @@ public interface TagihanRepository extends JpaRepository<Tagihan , Long> {
     @Query(value = "SELECT * FROM tagihan WHERE id_santri = :userId AND (status = 'Proses' OR status = 'Selesai') AND id_santri IS NOT NULL", nativeQuery = true)
     List<Tagihan> findByStatus(String userId);
 
+    @Query(value = "SELECT * FROM tagihan WHERE status = 'Proses' OR status = 'Selesai' ", nativeQuery = true)
+    List<Tagihan> findByHistory();
+
 
     @Query(value = "SELECT * FROM tagihan WHERE id_santri = :userId AND MONTH(created_date) = :bulan", nativeQuery = true)
     List<Tagihan> findBySantriIdAndMonth(@Param("userId") String userId, @Param("bulan") int bulan);
@@ -29,6 +32,11 @@ public interface TagihanRepository extends JpaRepository<Tagihan , Long> {
 
     @Query(value = "SELECT * FROM tagihan WHERE jenis_tagihan =:tagihan AND status =:status", nativeQuery = true)
     List<Tagihan> findByJenisTagihanAndStatus(@Param("tagihan") String tagihan , @Param("status") String status);
+
+    @Query(value = "SELECT * FROM tagihan WHERE status = 'Proses' ", nativeQuery = true)
+    List<Tagihan> findByStatusProses();
+    @Query(value = "SELECT * FROM tagihan WHERE status = 'Belum' ", nativeQuery = true)
+    List<Tagihan> findByStatusBelum();
 
     @Query(value = "SELECT * FROM tagihan WHERE MONTH(created_date) = :bulan", nativeQuery = true)
     List<Tagihan> findByMonth(@Param("bulan") int bulan);

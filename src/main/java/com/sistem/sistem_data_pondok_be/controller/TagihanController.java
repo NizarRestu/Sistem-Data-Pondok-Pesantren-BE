@@ -34,9 +34,22 @@ public class TagihanController {
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok( tagihanService.getAll(jwtToken));
     }
+    @GetMapping("/all/history")
+    public CommonResponse<List<Tagihan>> getHistory( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok( tagihanService.getHistory(jwtToken));
+    }
     @PutMapping("/{id}")
     public CommonResponse<Tagihan> put(@PathVariable("id") Long id , @RequestBody Tagihan tagihan){
         return ResponseHelper.ok( tagihanService.edit(id, tagihan));
+    }
+    @PutMapping("lolos/{id}")
+    public CommonResponse<Tagihan> lolos(@PathVariable("id") Long id){
+        return ResponseHelper.ok( tagihanService.lolos(id));
+    }
+    @PutMapping("gagal/{id}")
+    public CommonResponse<Tagihan> gagal(@PathVariable("id") Long id){
+        return ResponseHelper.ok( tagihanService.gagal(id));
     }
     @PutMapping("delete/{id}")
     public CommonResponse<Tagihan> deleteId(@PathVariable("id") Long id){
@@ -55,6 +68,16 @@ public class TagihanController {
     public CommonResponse<List<Tagihan>> getByStatus( HttpServletRequest requests){
         String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(tagihanService.getTagihanByStatus(jwtToken));
+    }
+    @GetMapping("/pembayaran")
+    public CommonResponse<List<Tagihan>> getByStatusProses( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(tagihanService.getTagihanByStatusProses(jwtToken));
+    }
+    @GetMapping("/admin")
+    public CommonResponse<List<Tagihan>> getByStatusBelum( HttpServletRequest requests){
+        String jwtToken = requests.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(tagihanService.getTagihanByStatusBelum(jwtToken));
     }
     @GetMapping("/santri/{userId}/bulan/{bulan}")
     public List<Tagihan> getTagihanBySantriAndMonth(@PathVariable String userId, @PathVariable int bulan) {

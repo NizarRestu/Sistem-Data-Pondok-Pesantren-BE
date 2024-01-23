@@ -4,8 +4,10 @@ import com.sistem.sistem_data_pondok_be.exception.BadRequestException;
 import com.sistem.sistem_data_pondok_be.exception.NotFoundException;
 import com.sistem.sistem_data_pondok_be.model.Akun;
 import com.sistem.sistem_data_pondok_be.model.Tagihan;
+import com.sistem.sistem_data_pondok_be.model.Transaksi;
 import com.sistem.sistem_data_pondok_be.repository.AkunRepository;
 import com.sistem.sistem_data_pondok_be.repository.TagihanRepository;
+import com.sistem.sistem_data_pondok_be.repository.TransaksiRepository;
 import com.sistem.sistem_data_pondok_be.security.JwtUtils;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class TagihanService {
     @Autowired
     private TagihanRepository tagihanRepository;
 
+    @Autowired
+    private TransaksiRepository transaksiRepository;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -50,13 +54,39 @@ public class TagihanService {
         }
         throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
+    public List<Tagihan> getHistory(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+        return tagihanRepository.findByHistory();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
 
     public Tagihan edit(Long id, Tagihan tagihan) {
         Tagihan update = tagihanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setJenis_tagihan(tagihan.getJenis_tagihan());
         update.setNama_tagihan(tagihan.getNama_tagihan());
-        update.setJumlah_tagihan(tagihan.getJumlah_tagihan());
         update.setTotal_tagihan(tagihan.getTotal_tagihan());
+        return tagihanRepository.save(update);
+    }
+    public Tagihan lolos(Long id) {
+        Tagihan update = tagihanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+       update.setStatus("Selesai");
+       Long idTransaksi = update.getTransaksi_id();
+        Transaksi transaksi = transaksiRepository.findById(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        transaksi.setStatus("Berhasil");
+        transaksiRepository.save(transaksi);
+        return tagihanRepository.save(update);
+    }
+    public Tagihan gagal(Long id) {
+        Tagihan update = tagihanRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+       update.setStatus("Belum");
+       Long idTransaksi = update.getTransaksi_id();
+        Transaksi transaksi = transaksiRepository.findById(idTransaksi).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        transaksi.setStatus("Gagal");
+        transaksiRepository.save(transaksi);
         return tagihanRepository.save(update);
     }
     public Tagihan hapusId(Long id) {
@@ -87,6 +117,24 @@ public class TagihanService {
         return tagihanRepository.findByStatus(String.valueOf(user.getId()));
     }
 
+    public List<Tagihan> getTagihanByStatusProses(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+        return tagihanRepository.findByStatusProses();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
+    public List<Tagihan> getTagihanByStatusBelum(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+        return tagihanRepository.findByStatusBelum();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
     public List<Tagihan> findBySantriIdAndMonth(String userId, int bulan) {
         return tagihanRepository.findBySantriIdAndMonth(userId,bulan);
     }
@@ -102,15 +150,6 @@ public class TagihanService {
         Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
         if (user.getRole().equals("Pengurus")){
         return tagihanRepository.findByMonth(bulan);
-        }
-        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
-    }
-    public List<Tagihan> findByTagihan(String jwtToken, String tagihan) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
-        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
-        if (user.getRole().equals("Pengurus")){
-        return tagihanRepository.findByJenisTagihan(tagihan);
         }
         throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }

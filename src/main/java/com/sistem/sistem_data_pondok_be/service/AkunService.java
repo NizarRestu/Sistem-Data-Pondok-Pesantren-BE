@@ -90,6 +90,15 @@ public class AkunService {
         }
         throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
     }
+    public List<Akun> getSantri(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Akun user = akunRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Email Not Found"));
+        if (user.getRole().equals("Pengurus")){
+        return akunRepository.findBySantri();
+        }
+        throw new BadRequestException("API ini hanya bisa di akses oleh pengurus");
+    }
 
     public Akun edit(Long id, Akun user , String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
